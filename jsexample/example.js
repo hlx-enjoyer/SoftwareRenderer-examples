@@ -10,7 +10,16 @@ let ctx = undefined;
 let width = undefined;
 let height = undefined;
 
+// LA GAME - START
+
 let rot = {x: 0, y: 0, z: 0};
+let pos = {x: 0, y: 0, z: 1};
+let keystates = {
+    a: false, d: false, w: false, s: false, r: false, f: false,
+    left: false, right: false, up: false, down: false, lt: false, gt: false,
+};
+
+// LA GAME - END
 
 function point({x, y}, {w, h}) {
     ctx.fillStyle = FRONTCOLOR;
@@ -158,17 +167,27 @@ function setup(path) {
 function frame() {
     const dt = 1/FPS;
 
-    rot.y += (Math.PI*dt)*0.25;
-    // rot.x += (Math.PI*dt)*0.25;
-    // rot.z += (Math.PI*dt)*0.25;
-    
+    if (keystates["left"])  rot.z += (Math.PI*dt);
+    if (keystates["right"]) rot.z -= (Math.PI*dt);
+    if (keystates["up"])    rot.x -= (Math.PI*dt);
+    if (keystates["down"])  rot.x += (Math.PI*dt);
+    if (keystates["lt"])    rot.y -= (Math.PI*dt);
+    if (keystates["gt"])    rot.y += (Math.PI*dt);
+
+    if (keystates["r"]) pos.y += dt;
+    if (keystates["f"]) pos.y -= dt;
+    if (keystates["a"]) pos.x -= dt;
+    if (keystates["d"]) pos.x += dt;
+    if (keystates["w"]) pos.z += dt;
+    if (keystates["s"]) pos.z -= dt;
+
     let vt = [];
 
     // Rotating
 
     for (const v of verts) {
         let t = rotateAbs({x: v[0], y: v[1], z: v[2]}, rot);
-        t = translate(t, {x: 0, y: 0, z: 1});
+        t = translate(t, pos);
 
         vt.push([ t.x, t.y, t.z ]);
     }
@@ -178,5 +197,72 @@ function frame() {
 
     setTimeout(frame, 1000/FPS);
 }
+
+function keyaction(event) {
+    if (event.defaultPrevented) {
+        return;
+    }
+
+    switch (event.key) {
+        case "ArrowLeft": { // Key LEFT
+            keystates["left"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "ArrowRight": { // Key RIGHT
+            keystates["right"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "ArrowUp": { // Key UP
+            keystates["up"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "ArrowDown": { // Key DOWN
+            keystates["down"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case ",": { // Key ,
+            keystates["lt"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case ".": { // Key .
+            keystates["gt"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "r": { // Key r
+            keystates["r"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "f": { // Key f
+            keystates["f"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "a": { // Key a
+            keystates["a"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "d": { // Key d
+            keystates["d"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "w": { // Key w
+            keystates["w"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "s": { // Key s
+            keystates["s"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        case "s": { // Key s
+            keystates["s"] = (event.type == 'keydown') ? true : false;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+}
+
+document.addEventListener('keydown', keyaction);
+document.addEventListener('keyup', keyaction);
 
 // TODO: Filling.
