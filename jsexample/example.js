@@ -1,3 +1,5 @@
+// import { verts, faces } from 'cubeModelF4.js';
+
 const FPS = 60;
 const BACKCOLOR = "#181a1b";
 const FRONTCOLOR = "#00FF00";
@@ -93,21 +95,53 @@ function render(vt, ft) {
     clearFrameBuffer();
 
     for (const f of ft) {
-        const v0 = vt[f[0]];
-        const v1 = vt[f[1]];
-        const v2 = vt[f[2]];
+        if ((f.length % 4) == 0) { // Draw quads
+            const p0 = screen({x: vt[f[0]][0], y: vt[f[0]][1], z: vt[f[0]][2]});
+            const p1 = screen({x: vt[f[1]][0], y: vt[f[1]][1], z: vt[f[1]][2]});
+            const p2 = screen({x: vt[f[2]][0], y: vt[f[2]][1], z: vt[f[2]][2]});
+            const p3 = screen({x: vt[f[3]][0], y: vt[f[3]][1], z: vt[f[3]][2]});
 
-        const p0 = screen({x: v0[0], y: v0[1], z: v0[2]});
-        const p1 = screen({x: v1[0], y: v1[1], z: v1[2]});
-        const p2 = screen({x: v2[0], y: v2[1], z: v2[2]});
+            line(p0, p1);
+            line(p1, p2);
+            line(p2, p3);
+            line(p3, p0);
+        }
+        else if ((f.length % 3) == 0) { // Draw triangles
+            const p0 = screen({x: vt[f[0]][0], y: vt[f[0]][1], z: vt[f[0]][2]});
+            const p1 = screen({x: vt[f[1]][0], y: vt[f[1]][1], z: vt[f[1]][2]});
+            const p2 = screen({x: vt[f[2]][0], y: vt[f[2]][1], z: vt[f[2]][2]});
 
-        line(p0, p1);
-        line(p1, p2);
-        line(p2, p0);
+            line(p0, p1);
+            line(p1, p2);
+            line(p2, p0);
+        }
+        else if ((f.length % 2) == 0) { // Draw lines
+            const p0 = screen({x: vt[f[0]][0], y: vt[f[0]][1], z: vt[f[0]][2]});
+            const p1 = screen({x: vt[f[1]][0], y: vt[f[1]][1], z: vt[f[1]][2]});
+            line(p0, p1);
+        }
+        else { // Draw points.
+            point(screen({ x: vt[f[0]][0], y: vt[f[0]][1], z: vt[f[0]][2] }), { w: LINEWIDHT, h: LINEWIDHT });
+        }
     }
 }
 
-function setup() {
+function setup(path) {
+    if (path) {
+        localStorage.setItem("modelJsScript", path);
+        location.reload();
+        return;
+    }
+    else {
+        const model = localStorage.getItem("modelJsScript");
+        if (!model) { alert("Please select model with model buttons."); return; }
+
+        const element = document.createElement("script");
+        element.src = model;
+
+        document.head.appendChild(element);
+    }
+
     canvas = document.getElementById("canv");
     ctx = canvas.getContext("2d");
 
@@ -118,7 +152,6 @@ function setup() {
     ctx.lineWidth = LINEWIDHT;
     ctx.strokeStyle = FRONTCOLOR;
 
-    console.debug(ctx);
     setTimeout(frame, 1000/FPS);
 }
 

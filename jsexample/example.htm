@@ -1,13 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <title>JS SoftGL Example</title>
+
+    <style>
+        body {
+            color: #FFFFFF;
+            background-color: #181a1b;
+            font-family: monospace;
+        }
+
+        #canv {
+            margin: auto;
+            padding: auto;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            position: absolute;
+        }
+
+        #modelChanger {
+            margin: auto;
+            padding: auto;
+            text-align: center;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            position: absolute;
+        }
+
+        .modelChangerButton {
+            color: #FFFFFF;
+            background-color: #181a1b;
+        }
+    </style>
 </head>
-<body onload="setup();">
+<body onload="setup(null);">
     <canvas style="margin: auto; padding: 0; display: block; top: 0; bottom: 0; left: 0; right: 0; position: absolute;" width=600 height=600 id="canv">
     </canvas>
 
-    <script src="cubeModel.js"></script>
+    <div id="modelChanger">
+        <ul id="modelChangerList">
+            <button class="modelChangerButton" type="button" onclick="setup('models/cubeModelF4.js');">Cube F4</button>
+            <button class="modelChangerButton" type="button" onclick="setup('models/cubeModelF3.js');">Cube F3</button>
+            <button class="modelChangerButton" type="button" onclick="setup('models/cubeModelF2.js');">Cube F2</button>
+            <button class="modelChangerButton" type="button" onclick="setup('models/cubeModelF1.js');">Cube F1</button>
+            <button class="modelChangerButton" type="button" onclick="setup('models/pengerModel.js');">Penger OBJ</button>
+        </ul>
+    </div>
+
     <script src="example.js"></script>
 </body>
 </html>
